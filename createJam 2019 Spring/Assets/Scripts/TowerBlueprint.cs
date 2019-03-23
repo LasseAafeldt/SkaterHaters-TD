@@ -7,4 +7,6 @@ public class TowerBlueprint : ScriptableObject {
 
     public GameObject towerPrefab;
     public new string name;
+
+    public int cost;
 }
