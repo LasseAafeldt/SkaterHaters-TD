@@ -14,4 +14,8 @@ public class TowerBlueprintContainer : MonoBehaviour {
         TowerBlueprintSelector.towerBlueprint = tower;
     }
 
+    public int getTowerCost()
+    {
+        return tower.cost;
+    }
 }

@@ -10,4 +10,9 @@ public class TowerBlueprintSelector : MonoBehaviour {
         Debug.Log("Setting tower blueprint");
         towerBlueprint = selectedTower;
     }
+
+    public void deselectTowerBluerpint()
+    {
+        towerBlueprint = null;
+    }
 }
