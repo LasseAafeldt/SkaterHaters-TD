@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SkaterMovement : MonoBehaviour {
 
-    Transform end;               
+    Transform sBoard;               
     Transform start;
     bool skateboard = false;
     public float goalDistanceThreshold;
@@ -11,7 +11,7 @@ public class SkaterMovement : MonoBehaviour {
 
 
     void Awake() {
-        end = GameObject.FindGameObjectWithTag("End").transform;
+        sBoard = GameObject.FindGameObjectWithTag("Skateboard").transform;
         start = GameObject.FindGameObjectWithTag("Start").transform;
 
         nav = GetComponent<UnityEngine.AI.NavMeshAgent>();
@@ -27,18 +27,18 @@ public class SkaterMovement : MonoBehaviour {
     }
 
     void GetSkateboard() {
-        nav.SetDestination(end.position);
-        if (Vector3.Distance(nav.transform.position, end.position) < goalDistanceThreshold) {
+        nav.SetDestination(sBoard.position);
+        if (Vector3.Distance(nav.transform.position, sBoard.position) < goalDistanceThreshold) {
             skateboard = true;
         }
     }
     
     void GotSkateboard() {
         nav.SetDestination(start.position);
-        /*
+        
         if (Vector3.Distance(nav.transform.position, start.position) < goalDistanceThreshold) {
             skateboard = false;
         }
-        */
+        
     }
 }
