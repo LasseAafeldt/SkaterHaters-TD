@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b94ddb799560ee14b8b8d6f0b0a9c227, type: 3}
+  m_Name: Zapper
+  m_EditorClassIdentifier: 
+  towerPrefab: {fileID: 1281614852609620, guid: b189ec432d2d56043ad4ca133a5766a8,
+    type: 2}
+  name: Zapper
+  cost: 30

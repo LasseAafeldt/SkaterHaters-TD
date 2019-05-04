@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TowerBlueprintSelector : MonoBehaviour {
-    public static TowerBlueprint towerBlueprint;
+    public static TowerBlueprint towerBlueprintToBuild;
 
-    public void setTowerBlueprint(TowerBlueprint selectedTower)
+    public void setTowerBlueprintToBuild(TowerBlueprint selectedTower)
     {
         Debug.Log("Setting tower blueprint");
-        towerBlueprint = selectedTower;
+        towerBlueprintToBuild = selectedTower;
     }
 
     public void deselectTowerBluerpint()
     {
-        towerBlueprint = null;
+        towerBlueprintToBuild = null;
     }
 }

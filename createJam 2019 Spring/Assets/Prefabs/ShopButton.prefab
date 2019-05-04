@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 222752583466860028}
   - component: {fileID: 114256327241398004}
   - component: {fileID: 114719402312983852}
+  - component: {fileID: 114080960346534134}
   - component: {fileID: 114283506699350452}
   - component: {fileID: 114406292318623632}
   m_Layer: 5
@@ -48,6 +49,17 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114080960346534134
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1531044116557474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 024081d4ae9461f48a0abfb9e53f2b4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114256327241398004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -86,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7dc5ec379448b44fa7796d5bad63ab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tower: {fileID: 0}
+  towerBluprint: {fileID: 11400000, guid: cde7c0b3fdf5b9242922b98eb18ee08f, type: 2}
 --- !u!114 &114328522304502236
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -119,7 +131,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: Zapper
 --- !u!114 &114406292318623632
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -178,8 +190,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114283506699350452}
-        m_MethodName: setTowerBlueprint
+      - m_Target: {fileID: 114080960346534134}
+        m_MethodName: purchaseTower
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

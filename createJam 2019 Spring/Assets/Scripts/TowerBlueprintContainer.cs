@@ -6,16 +6,17 @@ public class TowerBlueprintContainer : MonoBehaviour {
 
     //public TowerBlueprint[] towerBluprints;
     //public List<TowerBlueprint> towerBlueprints = new List<TowerBlueprint>();
-    public TowerBlueprint tower;
+    public TowerBlueprint towerBluprint;
 
 
     public void setTowerBlueprint()
     {
-        TowerBlueprintSelector.towerBlueprint = tower;
+        TowerBlueprintSelector.towerBlueprintToBuild = towerBluprint;
     }
 
+    //used in shop
     public int getTowerCost()
     {
-        return tower.cost;
+        return towerBluprint.cost;
     }
 }
