@@ -14,4 +14,8 @@ MonoBehaviour:
   towerPrefab: {fileID: 1281614852609620, guid: b189ec432d2d56043ad4ca133a5766a8,
     type: 2}
   name: Zapper
+  towertype: 1
+  range: 0
+  dps: 0
+  attackrate: 0
   cost: 30

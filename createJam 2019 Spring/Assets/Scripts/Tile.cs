@@ -85,9 +85,14 @@ public class Tile : MonoBehaviour {
         tower = Instantiate(towerBlueprint.towerPrefab, 
             new Vector3(transform.position.x, transform.position.y + offset, transform.position.z), 
             Quaternion.identity);
+        //subtract the cost from our currency
         PlayerStats.currentCurrency -= towerBlueprint.cost;
+
+        //add the tower blueprint to the tower
+        tower.GetComponent<Tower>().TB = towerBlueprint;
         Debug.Log("Player bought "+ towerBlueprint.name +" for " + towerBlueprint.cost+ " gold! Player has "
             + PlayerStats.currentCurrency + " gold remaining.");
+        //make sure players can't go in negative gold cause of having a tower to build selected already
         if(PlayerStats.currentCurrency < towerBlueprint.cost)
         {
             //display play has run out of money for this tower

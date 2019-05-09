@@ -5,8 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Start
-  - Skater
   - Skateboard
+  - Skater
   layers:
   - Default
   - TransparentFX
