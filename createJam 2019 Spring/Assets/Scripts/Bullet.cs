@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour {
 
-    private Transform target;
-
     public float speed = 70f;
     public GameObject hitEffect;
 
-    public void setTarget(Transform _target)
+    private Transform target;
+    private float damage;
+
+    public void setTarget(Transform _target, float intendedDamage)
     {
         target = _target;
+        damage = intendedDamage;
     }
+
 
     private void FixedUpdate()
     {
@@ -36,13 +39,14 @@ public class Bullet : MonoBehaviour {
 
     void hitTarget()
     {
-        Debug.Log("The bullet hit something");
+        Debug.Log("The bullet hit "+ target.name);
         if(hitEffect != null)
         {
             GameObject effectInstance = (GameObject)Instantiate(hitEffect, transform.position, transform.rotation);
             Destroy(effectInstance, 4f);
         }
         Destroy(gameObject);
-
+        SkaterStats targetsStats = target.GetComponent<SkaterStats>();
+        targetsStats.TakeDamage(damage);
     }
 }

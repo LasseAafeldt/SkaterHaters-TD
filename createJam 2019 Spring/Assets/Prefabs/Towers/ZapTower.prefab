@@ -600,12 +600,12 @@ MonoBehaviour:
   EndObject: {fileID: 0}
   EndPosition: {x: 0, y: 0, z: 0}
   Generations: 6
-  Duration: 0.05
-  ChaosFactor: 0.15
-  ManualMode: 0
+  Duration: 1
+  ChaosFactor: 0.1
+  ManualMode: 1
   Rows: 1
   Columns: 1
-  AnimationMode: 3
+  AnimationMode: 0
 --- !u!114 &114998319143811768
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -619,7 +619,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TB: {fileID: 0}
   bulletPrefab: {fileID: 0}
-  firePoint: {fileID: 0}
+  firePoint: {fileID: 4696383590365418}
 --- !u!120 &120964692616215244
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -635,7 +635,6 @@ LineRenderer:
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 0}
   - {fileID: 2100000, guid: a82f4a6e8c45cc745ae63a22f659284a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -655,13 +654,13 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Positions:
   - {x: 0, y: 1, z: 0}
   - {x: 0, y: 1, z: 5}
   m_Parameters:
     serializedVersion: 2
-    widthMultiplier: 1
+    widthMultiplier: 0.1
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -679,8 +678,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0, g: 1, b: 0.757931, a: 1}
-      key1: {r: 0, g: 0.83711267, b: 1, a: 1}
+      key0: {r: 0, g: 0.8040824, b: 1, a: 1}
+      key1: {r: 0, g: 0.37826777, b: 1, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -709,7 +708,7 @@ LineRenderer:
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
-    textureMode: 0
+    textureMode: 1
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0

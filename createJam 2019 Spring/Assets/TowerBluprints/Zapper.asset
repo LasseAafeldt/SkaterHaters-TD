@@ -15,7 +15,7 @@ MonoBehaviour:
     type: 2}
   name: Zapper
   towertype: 1
-  range: 0
-  dps: 0
-  attackrate: 0
+  range: 10
+  dps: 10
+  attackrate: 3
   cost: 30

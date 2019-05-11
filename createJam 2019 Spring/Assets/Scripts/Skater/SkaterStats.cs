@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 
-public class SkaterHealth : MonoBehaviour {
+public class SkaterStats : MonoBehaviour {
 
-    public int startingHealth = 100;
-    public int currentHealth;
+    public float startingHealth = 100;
+    [SerializeField]
+    private float currentHealth;
 
     bool isDead = false;
 
@@ -11,7 +12,7 @@ public class SkaterHealth : MonoBehaviour {
         currentHealth = startingHealth;
     }
     
-    public void TakeDamage(int amount, Vector3 hitPoint) {
+    public void TakeDamage(float amount) {
         if (isDead)
             return;
 
@@ -24,5 +25,7 @@ public class SkaterHealth : MonoBehaviour {
     
     void Death() {
         isDead = true;
+        //Change layer to dead or similar
+        //Do death animation?
     }
 }

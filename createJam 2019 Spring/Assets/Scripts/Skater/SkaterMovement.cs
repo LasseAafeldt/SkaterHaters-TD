@@ -11,8 +11,12 @@ public class SkaterMovement : MonoBehaviour {
 
 
     void Awake() {
-        sBoard = GameObject.FindGameObjectWithTag("Skateboard").transform;
-        start = GameObject.FindGameObjectWithTag("Start").transform;
+        try
+        {
+            sBoard = GameObject.FindGameObjectWithTag("Skateboard").transform;
+            start = GameObject.FindGameObjectWithTag("Start").transform;
+        }
+        catch { }
 
         nav = GetComponent<UnityEngine.AI.NavMeshAgent>();
     }

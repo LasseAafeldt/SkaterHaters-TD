@@ -10,7 +10,7 @@ public class Tower : MonoBehaviour {
 
     [Header("Attributes")]
     private float range;
-    private float fireRate;
+    private float attacksPerSecond;
     private float fireCountdown = 0f;
     private float dps;
 
@@ -25,12 +25,14 @@ public class Tower : MonoBehaviour {
     public GameObject bulletPrefab;
     public Transform firePoint;
 
+    List<GameObject> enemySkaters;
+
     private void Start()
     {
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
         enemyTag = "Skater";
         range = TB.range;
-        fireRate = TB.attackrate;
+        attacksPerSecond = TB.attackrate;
         fireCountdown = 0f;
         dps = TB.dps;
         try
@@ -44,6 +46,7 @@ public class Tower : MonoBehaviour {
         if (ln != null)
             ln.enabled = false;
         checkTowerType();
+        enemySkaters = new List<GameObject>();
     }
 
     void checkTowerType()
@@ -54,6 +57,7 @@ public class Tower : MonoBehaviour {
             try
             {
                 lightningZap = GetComponent<LightningBoltScript>();
+                lightningZap.ManualMode = true;
             }
             catch
             {
@@ -72,7 +76,7 @@ public class Tower : MonoBehaviour {
         if(fireCountdown <= 0f)
         {
             shoot();
-            fireCountdown = 1f / fireRate;
+            fireCountdown = 1f / attacksPerSecond;
         }
 
         fireCountdown -= Time.deltaTime;
@@ -80,11 +84,28 @@ public class Tower : MonoBehaviour {
 
     void shoot()
     {
+        float damage = TB.dps / TB.attackrate;
         Debug.Log(gameObject.name + " is shooting");
         if (useZapper)
         {
+            SkaterStats skaterStats = target.GetComponent<SkaterStats>();
             //do zapper stuff
+            lightningZap.enabled = true;
+            lightningZap.StartObject = firePoint;
+            //get the point of impact on enemy
+            Vector3 enemyDir = target.transform.position - firePoint.position;
+            float enemySurfaceDist = Mathf.Clamp(enemyDir.magnitude, 
+                enemyDir.magnitude - 2, enemyDir.magnitude - target.GetComponent<Renderer>().bounds.size.x);
+            Vector3 enemyHitPoint = enemyDir.normalized * enemySurfaceDist;
+            //use target.transform for now (need change in lightning script maybe)
+            lightningZap.EndObject = target.transform;
+            float zapDuration = (1f / TB.attackrate) / 2f;
+            lightningZap.Duration = Mathf.Clamp(zapDuration, 0.03f, 0.2f);
             ln.enabled = true;
+            lightningZap.Trigger();
+            //StartCoroutine(fadeLigtning((1 / TB.attackrate) / 2));
+            //instatiate effect at lightningZap.endPosition
+            skaterStats.TakeDamage(damage);
 
         }
         else { 
@@ -92,7 +113,7 @@ public class Tower : MonoBehaviour {
             Bullet bullet = bulletGO.GetComponent<Bullet>();
             if(bullet != null)
             {
-                bullet.setTarget(target);
+                bullet.setTarget(target,damage);
             }
         }
     }
@@ -101,10 +122,17 @@ public class Tower : MonoBehaviour {
     void UpdateTarget()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-
+        enemySkaters.Clear();
+        foreach (GameObject enemy in enemies)
+        {
+            if (enemy.layer.Equals(LayerMask.NameToLayer("Skater")))
+            {
+                enemySkaters.Add(enemy);
+            }
+        }
         float shortestEnemyDistance = Mathf.Infinity;
         GameObject nearestEnemy = null;
-        foreach (GameObject enemy in enemies)
+        foreach (GameObject enemy in enemySkaters)
         {
             float distanceToEnemy = Vector3.Distance(enemy.transform.position, transform.position);
             if(distanceToEnemy < shortestEnemyDistance)
@@ -129,5 +157,12 @@ public class Tower : MonoBehaviour {
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, range);
+    }
+
+    IEnumerator fadeLigtning(float fadeTime)
+    {
+        yield return new WaitForSeconds(fadeTime);
+        lightningZap.enabled = false;
+        ln.enabled = false;
     }
 }
