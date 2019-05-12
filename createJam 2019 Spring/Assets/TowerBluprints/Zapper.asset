@@ -17,5 +17,5 @@ MonoBehaviour:
   towertype: 1
   range: 10
   dps: 10
-  attackrate: 3
+  attackrate: 2
   cost: 30

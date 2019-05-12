@@ -15,8 +15,10 @@ public class Tower : MonoBehaviour {
     private float dps;
 
     private bool useZapper;
+    [Header("Components")]
     private LightningBoltScript lightningZap;
     private LineRenderer ln;
+    private AudioSource audioSource;
 
     [Header("Unity Setup Fields")]
     //[SerializeField]
@@ -42,6 +44,14 @@ public class Tower : MonoBehaviour {
         catch
         {
             Debug.LogError(gameObject.name + " does not have a LineRenderer component");
+        }
+        try
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+        catch
+        {
+            Debug.LogError(gameObject.name + " does not have an AudioSource component");
         }
         if (ln != null)
             ln.enabled = false;
@@ -85,28 +95,11 @@ public class Tower : MonoBehaviour {
     void shoot()
     {
         float damage = TB.dps / TB.attackrate;
-        Debug.Log(gameObject.name + " is shooting");
+        //Debug.Log(gameObject.name + " is shooting");
         if (useZapper)
         {
-            SkaterStats skaterStats = target.GetComponent<SkaterStats>();
-            //do zapper stuff
-            lightningZap.enabled = true;
-            lightningZap.StartObject = firePoint;
-            //get the point of impact on enemy
-            Vector3 enemyDir = target.transform.position - firePoint.position;
-            float enemySurfaceDist = Mathf.Clamp(enemyDir.magnitude, 
-                enemyDir.magnitude - 2, enemyDir.magnitude - target.GetComponent<Renderer>().bounds.size.x);
-            Vector3 enemyHitPoint = enemyDir.normalized * enemySurfaceDist;
-            //use target.transform for now (need change in lightning script maybe)
-            lightningZap.EndObject = target.transform;
-            float zapDuration = (1f / TB.attackrate) / 2f;
-            lightningZap.Duration = Mathf.Clamp(zapDuration, 0.03f, 0.2f);
-            ln.enabled = true;
-            lightningZap.Trigger();
-            //StartCoroutine(fadeLigtning((1 / TB.attackrate) / 2));
-            //instatiate effect at lightningZap.endPosition
-            skaterStats.TakeDamage(damage);
-
+            ShootInstaHitZap(damage);
+            audioSource.Play();
         }
         else { 
             GameObject bulletGO = (GameObject) Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
@@ -115,7 +108,31 @@ public class Tower : MonoBehaviour {
             {
                 bullet.setTarget(target,damage);
             }
+            audioSource.Play();
         }
+    }
+
+    void ShootInstaHitZap(float intendedDamage)
+    {
+        //needed to damage enemy
+        SkaterStats skaterStats = target.GetComponent<SkaterStats>();
+        //do zapper stuff
+        lightningZap.enabled = true;
+        lightningZap.StartObject = firePoint;
+        //get the point of impact on enemy
+        Vector3 enemyDir = target.transform.position - firePoint.position;
+        float enemySurfaceDist = Mathf.Clamp(enemyDir.magnitude,
+            enemyDir.magnitude - 2, enemyDir.magnitude - target.GetComponent<Renderer>().bounds.size.x);
+        Vector3 enemyHitPoint = enemyDir.normalized * enemySurfaceDist;
+        //use target.transform for now (need change in lightning script maybe)
+        lightningZap.EndObject = target.transform;
+        float zapDuration = (1f / TB.attackrate) / 2f;
+        lightningZap.Duration = Mathf.Clamp(zapDuration, 0.03f, 0.2f);
+        ln.enabled = true;
+        lightningZap.Trigger();
+        //StartCoroutine(fadeLigtning((1 / TB.attackrate) / 2));
+        //instatiate effect at lightningZap.endPosition
+        skaterStats.TakeDamage(intendedDamage);
     }
 
     //Can possibly use OnTriggerEnter to add and remove from the enemies array if we need performance?
