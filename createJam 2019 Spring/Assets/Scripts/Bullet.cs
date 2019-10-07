@@ -46,7 +46,7 @@ public class Bullet : MonoBehaviour {
             Destroy(effectInstance, 4f);
         }
         Destroy(gameObject);
-        SkaterStats targetsStats = target.GetComponent<SkaterStats>();
+        SkaterStatsOld targetsStats = target.GetComponent<SkaterStatsOld>();
         targetsStats.TakeDamage(damage);
     }
 }

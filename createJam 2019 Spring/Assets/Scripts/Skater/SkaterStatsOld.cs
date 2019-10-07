@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using skaters.stats;
 
-public class SkaterStats : MonoBehaviour {
+public class SkaterStatsOld : MonoBehaviour {
 
+    [SerializeField] private Skater stats;
     [Header("Skater health")]
     public float startingHealth = 100;
     [SerializeField]

@@ -115,7 +115,7 @@ public class Tower : MonoBehaviour {
     void ShootInstaHitZap(float intendedDamage)
     {
         //needed to damage enemy
-        SkaterStats skaterStats = target.GetComponent<SkaterStats>();
+        SkaterStatsOld skaterStats = target.GetComponent<SkaterStatsOld>();
         //do zapper stuff
         lightningZap.enabled = true;
         lightningZap.StartObject = firePoint;
