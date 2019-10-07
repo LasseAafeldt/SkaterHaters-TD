@@ -22,6 +22,7 @@ public class SkaterMovement : MonoBehaviour {
 
     private void Start()
     {
+        sBoard = GameManager.singleton.sboard;
         skateboard = false;
         aSkaterHasSkateboard = false;
     }
