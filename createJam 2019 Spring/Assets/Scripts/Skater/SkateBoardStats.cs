@@ -8,9 +8,12 @@ public class SkateBoardStats : MonoBehaviour {
 
     NavMeshAgent agent;
 
+    public List<skaterBehaviour> waitingSkaters;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        waitingSkaters = new List<skaterBehaviour>();
     }
 
     private void Start()
@@ -33,4 +36,30 @@ public class SkateBoardStats : MonoBehaviour {
     {
         agent.enabled = true;
     }
+
+    public void addSkaterToQue(skaterBehaviour objToAdd)
+    {
+        if (waitingSkaters.Contains(objToAdd))
+        {
+            Debug.Log("Object " + objToAdd.name + " is already in the que and was therefore not added");
+            return;
+        }
+            
+        waitingSkaters.Add(objToAdd);
+    }
+
+    public void removeSkaterFromQue(skaterBehaviour objToRemove)
+    {
+
+        if (waitingSkaters.Contains(objToRemove))
+        {
+            waitingSkaters.Remove(objToRemove);
+        }
+    }
+    public void removeSkaterFromQue()
+    {
+        waitingSkaters.RemoveAt(0);
+    }
+
+
 }

@@ -71,7 +71,8 @@ public class skaterBehaviour : MonoBehaviour {
                 transform.SetParent(null);
                 //nav.enabled = true;
 
-                GameOver();
+                //GameOver();
+                Death();
             }
         }
     }
@@ -112,9 +113,8 @@ public class skaterBehaviour : MonoBehaviour {
 
     void GameOver()
     {
-        Death();
         Debug.Log("Player has lost the game... The skaters got their skateboard back!");
-        //gameOver = true;
+        gameOver = true;
     }
 
     public void TakeDamage(float amount)
@@ -134,6 +134,7 @@ public class skaterBehaviour : MonoBehaviour {
     {
         isDead = true;
         stopMovement();
+        sBoardStats.removeSkaterFromQue(this);  
 
         //Change layer to dead or similar
         gameObject.layer = LayerMask.NameToLayer("Death");
@@ -179,6 +180,7 @@ public class skaterBehaviour : MonoBehaviour {
             {
                 //do some que system
                 Debug.Log("I will que up now");
+                sBoardStats.addSkaterToQue(this);
                 
             }
         }
