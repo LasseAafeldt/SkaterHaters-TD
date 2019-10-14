@@ -2,16 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace skaters.stats
+[CreateAssetMenu(fileName = "new skater type", menuName = "Skater")]
+public class SkaterStats : ScriptableObject
 {
-    [CreateAssetMenu(fileName = "new skater type", menuName = "Skater")]
-    public class Skater : ScriptableObject
+    [SerializeField]
+    private float maxHealth;
+    [SerializeField]
+    private float moveSpeed;
+
+    [SerializeField]
+    private float deathDespawnTime;
+
+
+    public float getMaxHealth()
     {
-        public int maxHealth;
-        public float moveSpeed;
+        return maxHealth;
+    }
 
+    public float getMoveSpeed()
+    {
+        return moveSpeed;
+    }
 
-        public float deathDespawnTime;
-
+    public float getDeathDespawnTime()
+    {
+        return deathDespawnTime;
     }
 }

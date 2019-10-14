@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        sboard = GameObject.FindGameObjectWithTag("Skateboard").transform;
         singleton = this;
     }
     #endregion
@@ -23,6 +24,5 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        sboard = GameObject.FindGameObjectWithTag("Skateboard").transform;
     }
 }

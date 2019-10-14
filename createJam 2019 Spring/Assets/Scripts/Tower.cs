@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DigitalRuby.LightningBolt;
 
+[SelectionBase]
 public class Tower : MonoBehaviour {
 
     public TowerBlueprint TB;
@@ -115,7 +116,7 @@ public class Tower : MonoBehaviour {
     void ShootInstaHitZap(float intendedDamage)
     {
         //needed to damage enemy
-        SkaterStatsOld skaterStats = target.GetComponent<SkaterStatsOld>();
+        skaterBehaviour skaterStats = target.GetComponent<skaterBehaviour>();
         //do zapper stuff
         lightningZap.enabled = true;
         lightningZap.StartObject = firePoint;
@@ -169,11 +170,11 @@ public class Tower : MonoBehaviour {
         }
     }
 
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, range);
+        //Gizmos.DrawSphere(transform.position, TB.range);
+        Gizmos.DrawWireSphere(transform.position, TB.range);
     }
 
     IEnumerator fadeLigtning(float fadeTime)
