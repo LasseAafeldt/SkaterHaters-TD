@@ -8,6 +8,7 @@ public class skaterBehaviour : MonoBehaviour {
     public float goalDistanceThreshold;
     [SerializeField] private SkaterStats unitStats;
 
+    [Header("Debug ONLY")]
     [SerializeField] private float currentHealth;
     private float moveSpeed;
     private float despawnTime;
@@ -89,20 +90,11 @@ public class skaterBehaviour : MonoBehaviour {
     void OnSkateboardPickup()
     {
         isOnSkateboard = true;
-        // calleing out that the skateboard has been picked up
-        //if (skateboardPickupEvent != null)
-            //skateboardPickupEvent();
-
-        //attach the skatebaord to the skater who picked it up
         sBoard.position = skaterFeet.position;
         sBoard.rotation = transform.rotation;
         sBoard.Rotate(skaterFeet.up, 90f);
         transform.SetParent(sBoard);
 
-        //a skater has picked up the skateboard
-        //aSkaterHasSkateboard = true;
-
-        // set destination for skateboard
         if(sBoardStats != null)
         {
             //disable skater nav agent
@@ -120,9 +112,9 @@ public class skaterBehaviour : MonoBehaviour {
 
     void GameOver()
     {
+        Death();
         Debug.Log("Player has lost the game... The skaters got their skateboard back!");
-        gameOver = true;
-        //make delegate and handle in gameManager script or something
+        //gameOver = true;
     }
 
     public void TakeDamage(float amount)
@@ -142,7 +134,6 @@ public class skaterBehaviour : MonoBehaviour {
     {
         isDead = true;
         stopMovement();
-        Debug.Log("oh no I a Skater have died!!!");
 
         //Change layer to dead or similar
         gameObject.layer = LayerMask.NameToLayer("Death");
@@ -155,7 +146,6 @@ public class skaterBehaviour : MonoBehaviour {
     {
         yield return new WaitForSeconds(timeForRemoval);
         gameObject.GetComponent<Collider>().enabled = false;
-        //Debug.Log("Should have disabled collider now");
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);//if we don't use a dictionary then use destroy here instead
         Debug.LogWarning("A skater was set inactive instead of detroyed... Remember to create a dictionary");
@@ -172,5 +162,25 @@ public class skaterBehaviour : MonoBehaviour {
         //nav.SetDestination(transform.position);
         nav.isStopped = true;
         //nav.ResetPath();
+    }
+
+    public bool getIsOnSkateboard()
+    {
+        return isOnSkateboard;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer.Equals(LayerMask.NameToLayer("Skater")))
+        {
+            //Debug.Log("I have hit another skater!" + collision.gameObject.name);
+            skaterBehaviour otherSkater = collision.gameObject.GetComponent<skaterBehaviour>();
+            if (otherSkater.getIsOnSkateboard())
+            {
+                //do some que system
+                Debug.Log("I will que up now");
+                
+            }
+        }
     }
 }

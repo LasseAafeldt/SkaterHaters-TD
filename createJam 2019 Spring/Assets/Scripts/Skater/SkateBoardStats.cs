@@ -21,7 +21,7 @@ public class SkateBoardStats : MonoBehaviour {
     public void setDestination(Vector3 destination)
     {
         agent.SetDestination(destination);
-        Debug.Log("Skateboard destination was set");
+        //Debug.Log("Skateboard destination was set");
     }
 
     public void disableAgent()
