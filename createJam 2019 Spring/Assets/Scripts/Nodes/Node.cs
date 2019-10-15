@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Node
 {
-    public Rect rect;
+    public Rect nodeRect;
+    public Rect collectiveRect;
     public string title;
     public bool isDragged;
     public bool isSelected;
@@ -18,27 +19,39 @@ public class Node
 
     public Action<Node> OnRemoveNode;
 
-    public Node(Vector2 position, float width, float height, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> OnClickInPoint, Action<ConnectionPoint> OnClickOutPoint, Action<Node> OnClickRemoveNode)
+    public DrawableInfo myInfo;
+
+    public Node(Vector2 position, float width, float height, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> OnClickInPoint, Action<ConnectionPoint> OnClickOutPoint, Action<Node> OnClickRemoveNode, DrawableInfo info)
     {
-        rect = new Rect(position.x, position.y, width, height);
+        nodeRect = new Rect(position.x, position.y, width, height);
         style = nodeStyle;
         inPoint = new ConnectionPoint(this, ConnectionPointType.In, inPointStyle, OnClickInPoint);
         outPoint = new ConnectionPoint(this, ConnectionPointType.Out, outPointStyle, OnClickOutPoint);
         defaultNodeStyle = nodeStyle;
         selectedNodeStyle = selectedStyle;
         OnRemoveNode = OnClickRemoveNode;
+        myInfo = info; // ---------------------------------- this here have problems... myinfo seems to not be set
+        myInfo.style = style;
+        collectiveRect = new Rect(nodeRect.position.x, nodeRect.position.y, nodeRect.size.x, 
+            nodeRect.size.y + myInfo.GetHeight() + (nodeRect.size.y / 2f));
     }
 
     public void Drag(Vector2 delta)
     {
-        rect.position += delta;
+        nodeRect.position += delta;
     }
 
     public void Draw()
     {
         inPoint.Draw();
         outPoint.Draw();
-        GUI.Box(rect, title, style);
+
+        GUI.BeginGroup(new Rect(nodeRect.position.x + 5f, nodeRect.position.y + nodeRect.size.y / 2f, nodeRect.size.x - 10f, nodeRect.size.y + myInfo.GetHeight()), style);
+        myInfo.Draw(collectiveRect, style);
+        GUI.EndGroup();
+
+        GUI.Box(nodeRect, title, style);
+        EditorGUI.LabelField(nodeRect, myInfo.title, style);
     }
 
     public bool ProcessEvents(Event e)
@@ -48,7 +61,7 @@ public class Node
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    if (rect.Contains(e.mousePosition))
+                    if (nodeRect.Contains(e.mousePosition))
                     {
                         isDragged = true;
                         GUI.changed = true;
@@ -63,7 +76,7 @@ public class Node
                     }
                 }
 
-                if (e.button == 1 && isSelected && rect.Contains(e.mousePosition))
+                if (e.button == 1 && isSelected && nodeRect.Contains(e.mousePosition))
                 {
                     ProcessContextMenu();
                     e.Use();

@@ -201,7 +201,7 @@ public class NodeBasedEditor : EditorWindow
     private void ProcessContextMenu(Vector2 mousePosition)
     {
         GenericMenu genericMenu = new GenericMenu();
-        genericMenu.AddItem(new GUIContent("Add node"), false, () => OnClickAddNode(mousePosition));
+        genericMenu.AddItem(new GUIContent("Add node"), false, () => OnClickAddNode(mousePosition, new TowerNode()));
         genericMenu.ShowAsContext();
     }
 
@@ -220,14 +220,14 @@ public class NodeBasedEditor : EditorWindow
         GUI.changed = true;
     }
 
-    private void OnClickAddNode(Vector2 mousePosition)
+    private void OnClickAddNode(Vector2 mousePosition, DrawableInfo info)
     {
         if (nodes == null)
         {
             nodes = new List<Node>();
         }
 
-        nodes.Add(new Node(mousePosition, 200, 50, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode));
+        nodes.Add(new Node(mousePosition, 200, 50, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, info));
     }
 
     private void OnClickInPoint(ConnectionPoint inPoint)
