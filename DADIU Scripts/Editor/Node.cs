@@ -21,7 +21,11 @@ public class Node {
 
 	public DrawableInfo myInfo;
 
-	public Node ( Vector2 position, float width, float height, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> OnClickInPoint, Action<ConnectionPoint> OnClickOutPoint, Action<Node> OnClickRemoveNode, DrawableInfo info ) {
+	public Node ( Vector2 position, float width, float height, GUIStyle nodeStyle, 
+        GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, 
+        Action<ConnectionPoint> OnClickInPoint, Action<ConnectionPoint> OnClickOutPoint, 
+        Action<Node> OnClickRemoveNode, DrawableInfo info )
+    {
 		nodeRect = new Rect ( position.x, position.y, width, height );
 		style = nodeStyle;
 		inPoint = new ConnectionPoint ( this, ConnectionPointType.In, inPointStyle, OnClickInPoint );

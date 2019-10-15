@@ -217,8 +217,9 @@ public class NodeBasedEditor : EditorWindow {
 	private void OnClickAddNode ( Vector2 mousePosition, DrawableInfo info ) {
 		if ( nodes == null ) {
 			nodes = new List<Node> ();
+            Debug.Log("Nodes list are null so a new list is created");
 		}
-
+        Debug.Log("nodes lenght = " + nodes.Count);
 		nodes.Add ( new Node ( mousePosition, 350, 50, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, info ) );
 	}
 
