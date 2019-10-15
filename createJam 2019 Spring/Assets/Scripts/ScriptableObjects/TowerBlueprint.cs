@@ -25,5 +25,8 @@ public class TowerBlueprint : ScriptableObject {
     [Header("Other attributes")]
     public int cost;
 
+    public List<TowerBlueprint> upgradesTo = new List<TowerBlueprint>();
+    public List<TowerBlueprint> upgradesFrom = new List<TowerBlueprint>();
+
     //if zapper have a fade time
 }

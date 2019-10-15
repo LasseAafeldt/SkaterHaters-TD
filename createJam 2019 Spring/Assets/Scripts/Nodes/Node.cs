@@ -50,8 +50,13 @@ public class Node
         myInfo.Draw(collectiveRect, style);
         GUI.EndGroup();
 
-        GUI.Box(nodeRect, title, style);
-        EditorGUI.LabelField(nodeRect, myInfo.title, style);
+        style.alignment = TextAnchor.MiddleCenter;
+        style.richText = true;
+        string titelText = "<color=#ffa500ff>" + myInfo.title + "</color>";
+        GUI.Box(nodeRect, titelText, style);
+        //EditorGUI.LabelField(nodeRect, titelText, style);
+
+        style.alignment = TextAnchor.UpperLeft;
     }
 
     public bool ProcessEvents(Event e)
