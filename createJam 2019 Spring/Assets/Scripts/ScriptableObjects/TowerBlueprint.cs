@@ -19,14 +19,30 @@ public class TowerBlueprint : ScriptableObject {
 
     [Header("Attack attributes")]
     public float range;
+    private float minRange = 0.1f;
+    private float maxRange = 20f;
     public float dps;
+    private float maxDPS = 3000f;
     public float attackrate;
 
     [Header("Other attributes")]
     public int cost;
+    //if zapper have a fade time
 
     public List<TowerBlueprint> upgradesTo = new List<TowerBlueprint>();
     public List<TowerBlueprint> upgradesFrom = new List<TowerBlueprint>();
 
-    //if zapper have a fade time
+    public float getMinRange()
+    {
+        return minRange;
+    }
+    public float getMaxRange()
+    {
+        return maxRange;
+    }
+    public float getMaxDPS()
+    {
+        return maxDPS;
+    }
+
 }

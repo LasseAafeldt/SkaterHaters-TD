@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System;
 
 public class NodeBasedEditor : EditorWindow
 {
@@ -11,6 +12,7 @@ public class NodeBasedEditor : EditorWindow
     private GUIStyle selectedNodeStyle;
     private GUIStyle inPointStyle;
     private GUIStyle outPointStyle;
+    private GUIStyle buttonStyle;
 
     private static Texture2D backgroundTex;
     private static Color smallGridColor;
@@ -19,8 +21,13 @@ public class NodeBasedEditor : EditorWindow
     private ConnectionPoint selectedInPoint;
     private ConnectionPoint selectedOutPoint;
 
+    private Rect UiPositioning;
+
     private Vector2 offset;
     private Vector2 drag;
+
+    private string colorBegin;
+    private string colorEnd;
 
     [MenuItem("Window/Node Based Editor")]
     private static void OpenWindow()
@@ -55,6 +62,18 @@ public class NodeBasedEditor : EditorWindow
         outPointStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
         outPointStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
         outPointStyle.border = new RectOffset(4, 4, 12, 12);
+
+        buttonStyle = new GUIStyle();
+        buttonStyle.alignment = TextAnchor.MiddleCenter;
+        //EditorGUIUtility.Load("builtin skins/darkskin/images/btn.png") as Texture2D;
+        buttonStyle.normal.background =  EditorGUIUtility.IconContent("PR DropHere@2x").image as Texture2D;
+        buttonStyle.active.background = EditorGUIUtility.IconContent("PingBox@2x").image as Texture2D;
+        buttonStyle.border = new RectOffset(4, 4, 12, 12);
+
+        colorBegin = "<color=#FF8000><b>";
+        colorEnd = "</b></color>";
+
+        UiPositioning = new Rect(10f, 10f, 150f, 50f);
     }
 
     private void OnGUI()
@@ -72,7 +91,29 @@ public class NodeBasedEditor : EditorWindow
         ProcessNodeEvents(Event.current);
         ProcessEvents(Event.current);
 
+        if (GUI.Button(UiPositioning, colorBegin + "Save Towers" + colorEnd, buttonStyle))
+        {
+            saveNodes();
+        }
+
+        if (GUI.Button(new Rect(UiPositioning.x + UiPositioning.width + 20f, UiPositioning.y, UiPositioning.width, 
+            UiPositioning.height), colorBegin + "Load Towers" + colorEnd, buttonStyle))
+        {
+            LoadTowers();
+        }
+        //style.alignment = TextAnchor.UpperLeft;
+
         if (GUI.changed) Repaint();
+    }
+
+    private void LoadTowers()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void saveNodes()
+    {
+        throw new NotImplementedException();
     }
 
     private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)

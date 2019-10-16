@@ -21,6 +21,9 @@ public class Node
 
     public DrawableInfo myInfo;
 
+    private string colorBegin;
+    private string colorEnd;
+
     public Node(Vector2 position, float width, float height, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> OnClickInPoint, Action<ConnectionPoint> OnClickOutPoint, Action<Node> OnClickRemoveNode, DrawableInfo info)
     {
         nodeRect = new Rect(position.x, position.y, width, height);
@@ -34,6 +37,8 @@ public class Node
         myInfo.style = style;
         collectiveRect = new Rect(nodeRect.position.x, nodeRect.position.y, nodeRect.size.x, 
             nodeRect.size.y + myInfo.GetHeight() + (nodeRect.size.y / 2f));
+        colorBegin = "<color=#FF8000><b>";
+        colorEnd = "</b></color>";
     }
 
     public void Drag(Vector2 delta)
@@ -52,10 +57,8 @@ public class Node
 
         style.alignment = TextAnchor.MiddleCenter;
         style.richText = true;
-        string titelText = "<color=#ffa500ff>" + myInfo.title + "</color>";
+        string titelText = colorBegin + myInfo.title + colorEnd;
         GUI.Box(nodeRect, titelText, style);
-        //EditorGUI.LabelField(nodeRect, titelText, style);
-
         style.alignment = TextAnchor.UpperLeft;
     }
 
