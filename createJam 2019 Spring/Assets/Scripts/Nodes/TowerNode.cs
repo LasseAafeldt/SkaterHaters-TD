@@ -103,8 +103,9 @@ public class TowerNode : DrawableInfo
     private GameObject DrawStat(string name, Rect rect, float marginLeft, float marginRight, float topOffset, GameObject obj, GUIStyle _style)
     {
         GUI.Label(new Rect(rect.position.x + marginLeft, rect.position.y + topOffset, rect.size.x - marginRight, rect.size.y / 2f), colorBegin + name + colorEnd, _style);
-        return (GameObject)EditorGUI.ObjectField(new Rect(rect.position.x + marginLeft, rect.position.y + topOffset + 15f, rect.size.x - marginRight, rect.size.y / 2f), obj, typeof(GameObject));
+        return (GameObject)EditorGUI.ObjectField(new Rect(rect.position.x + marginLeft, rect.position.y + topOffset + 15f, rect.size.x - marginRight, rect.size.y / 2f), obj, typeof(GameObject), false) as GameObject;
     }
+
     public TowerBlueprint GetTower()
     {
         TowerBlueprint tower = ScriptableObject.CreateInstance<TowerBlueprint>();

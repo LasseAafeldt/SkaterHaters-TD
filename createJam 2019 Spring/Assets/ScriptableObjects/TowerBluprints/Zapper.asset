@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b94ddb799560ee14b8b8d6f0b0a9c227, type: 3}
   m_Name: Zapper
   m_EditorClassIdentifier: 
-  towerPrefab: {fileID: 0}
+  towerPrefab: {fileID: 7088706868071838504, guid: 43d402a23cc64a348b4e9fbbb15d4f79,
+    type: 3}
   name: Zapper
   towertype: 1
   range: 15
