@@ -7,8 +7,8 @@ public class TowerNode : DrawableInfo
 {
     //private TowerBlueprint towerBlueprint;
     //public enum towerType { Standard, Zapper, Cannon }
-    public TowerBlueprint.TowerType type;
-
+    private TowerBlueprint.TowerType type;
+    private GameObject towerPrefab;
     //stats
     private float range;
     private float dps;
@@ -37,6 +37,7 @@ public class TowerNode : DrawableInfo
 
         title = tower.name;
         type = tower.towertype;
+        towerPrefab = tower.towerPrefab;
         range = tower.range;
         dps = tower.dps;
         attackRate = tower.attackrate;
@@ -64,10 +65,11 @@ public class TowerNode : DrawableInfo
 
         title = DrawStat("Title", baseRect, marginLeft, marginRight, spacing, title, textStyle);
         type = DrawStat("Tower Type", baseRect, marginLeft, marginRight, 2*spacing, type, textStyle);
-        range = DrawStat("Range", baseRect, marginLeft, marginRight, 3*spacing, range, true, GetTower().getMinRange(), GetTower().getMaxRange(), textStyle);
-        dps = DrawStat("Damage/Sec", baseRect, marginLeft, marginRight, 4*spacing, dps, true, 0 ,GetTower().getMaxDPS(), textStyle);
-        attackRate = DrawStat("Attackrate", baseRect, marginLeft, marginRight, 5 * spacing, attackRate, true, 0.1f, 10f, textStyle);
-        cost = DrawStat("Tower Cost", baseRect, marginLeft, marginRight, 6 * spacing, cost, false, 0, 0, textStyle);
+        towerPrefab = DrawStat("Tower Prefab", baseRect, marginLeft, marginRight, 3*spacing, towerPrefab, textStyle);
+        range = DrawStat("Range", baseRect, marginLeft, marginRight, 4*spacing, range, true, GetTower().getMinRange(), GetTower().getMaxRange(), textStyle);
+        dps = DrawStat("Damage/Sec", baseRect, marginLeft, marginRight, 5*spacing, dps, true, 0 ,GetTower().getMaxDPS(), textStyle);
+        attackRate = DrawStat("Attackrate", baseRect, marginLeft, marginRight, 6*spacing, attackRate, true, 0.1f, 10f, textStyle);
+        cost = DrawStat("Tower Cost", baseRect, marginLeft, marginRight, 7*spacing, cost, false, 0, 0, textStyle);
     }
 
     private float DrawStat(string name, Rect rect, float marginLeft, float marginRight, float topOffset, float value, bool isSLider, float min, float max, GUIStyle _style)
@@ -98,19 +100,21 @@ public class TowerNode : DrawableInfo
         GUI.Label(new Rect(rect.position.x + marginLeft, rect.position.y + topOffset, rect.size.x - marginRight, rect.size.y / 2f), colorBegin+name+colorEnd, _style);
         return (TowerBlueprint.TowerType)EditorGUI.EnumPopup(new Rect(rect.position.x + marginLeft, rect.position.y + topOffset + 15f, rect.size.x - marginRight, rect.size.y / 2f), _type);
     }
-
+    private GameObject DrawStat(string name, Rect rect, float marginLeft, float marginRight, float topOffset, GameObject obj, GUIStyle _style)
+    {
+        GUI.Label(new Rect(rect.position.x + marginLeft, rect.position.y + topOffset, rect.size.x - marginRight, rect.size.y / 2f), colorBegin + name + colorEnd, _style);
+        return (GameObject)EditorGUI.ObjectField(new Rect(rect.position.x + marginLeft, rect.position.y + topOffset + 15f, rect.size.x - marginRight, rect.size.y / 2f), obj, typeof(GameObject));
+    }
     public TowerBlueprint GetTower()
     {
         TowerBlueprint tower = ScriptableObject.CreateInstance<TowerBlueprint>();
         tower.name = title;
-        //tower prefab??
         tower.towertype = type;
+        tower.towerPrefab = towerPrefab;
         tower.range = range;
         tower.dps = dps;
         tower.attackrate = attackRate;
         tower.cost = cost;
-        //tower.minimumStats = minimumStats;
-        //weapon.requirementsToMeet = requirements.statsToMeet;
         return tower;
     }
 }
