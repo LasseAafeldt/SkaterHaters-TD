@@ -15,9 +15,9 @@ MonoBehaviour:
   towerPrefab: {fileID: 0}
   name: New tower
   towertype: 2
-  range: 9.3
-  dps: 1088
-  attackrate: 0
-  cost: 0
+  range: 13.2
+  dps: 2618
+  attackrate: 6.99
+  cost: 300
   upgradesTo: []
   upgradesFrom: []

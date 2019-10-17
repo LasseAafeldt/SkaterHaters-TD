@@ -31,7 +31,7 @@ public class NodeBasedEditor : EditorWindow
 
     private TowerBlueprint tower;
     //private TowerNode towerNode;
-    string[] workingFolder = { "Assets/ScriptableObjects/TowerBluprints" };
+    string[] workingFolders = { "Assets/ScriptableObjects/TowerBluprints" };
 
     [MenuItem("Window/Node Based Editor")]
     private static void OpenWindow()
@@ -114,7 +114,7 @@ public class NodeBasedEditor : EditorWindow
         NodeBasedEditor window = GetWindow<NodeBasedEditor>();
         Rect windoPosition = window.position;
         Vector2 newNodePosition = new Vector2(windoPosition.x, windoPosition.y);
-        string[] result = AssetDatabase.FindAssets("t:TowerBlueprint",workingFolder);
+        string[] result = AssetDatabase.FindAssets("t:TowerBlueprint",workingFolders);
 
         if (result.Length != 0)
         {
@@ -137,14 +137,10 @@ public class NodeBasedEditor : EditorWindow
             }
 
         }
-        /*else //creates a new TowerBlueprint if none exist (we don't want that now)
+        else
         {
-            Debug.Log("Did not find any towers");
-            tower = ScriptableObject.CreateInstance<TowerBlueprint>();
-            AssetDatabase.CreateAsset(tower, workingFolder[0] + "/New Tower.asset");
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-        }*/
+            Debug.Log("No TowerBlueprints seems to exist yet");
+        }
     }
 
     private void saveNodes()
@@ -154,26 +150,19 @@ public class NodeBasedEditor : EditorWindow
             tower = ScriptableObject.CreateInstance<TowerBlueprint>();
             TowerNode newTowerNode = (TowerNode)node.myInfo;
             tower = newTowerNode.GetTower();
-            //tower.upgradesTo = 
+            string path = workingFolders[0] + "/" + tower.name + ".asset";
+            TowerBlueprint asset = AssetDatabase.LoadAssetAtPath(path, typeof(TowerBlueprint)) as TowerBlueprint;
 
-            string[] findAllTowersWithName = AssetDatabase.FindAssets(tower.name + " t:TowerBlueprint", workingFolder);
-
-            if (AssetDatabase.FindAssets(tower.name + " t:TowerBlueprint", workingFolder).Length == 0)
+            if (asset == null)
             {
-                //this is where stuff should happen if the asset doesn't already exist (but it seems unnecessary currently)
+                AssetDatabase.CreateAsset(tower, workingFolders[0] + "/" + tower.name + ".asset");
             }
-            /*else //doesn't work
+            else
             {
-                Debug.Log("trying to update existing asset");
-                AssetDatabase.AddObjectToAsset(tower, workingFolder[0] + "/" + tower.name + ".asset");
-                AssetDatabase.Refresh();
-            }*/
-            //Debug.Log("You just overwrote the information saved in: " + tower.name);
-            AssetDatabase.CreateAsset(tower, workingFolder[0] + "/" + tower.name + ".asset");
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+                EditorUtility.CopySerialized(tower, asset);
+            }
         }
-        Debug.Log("Towers have been saved");
+        Debug.Log("Towers have been saved/updated");
     }
 
     private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
