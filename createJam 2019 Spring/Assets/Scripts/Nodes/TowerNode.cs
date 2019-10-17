@@ -28,6 +28,20 @@ public class TowerNode : DrawableInfo
         colorBegin = "<color=#FF8000><b>";
         colorEnd = "</b></color>";
     }
+    public TowerNode(TowerBlueprint tower)
+    {
+        height = 300f;
+        spacing = 35f;
+        colorBegin = "<color=#FF8000><b>";
+        colorEnd = "</b></color>";
+
+        title = tower.name;
+        type = tower.towertype;
+        range = tower.range;
+        dps = tower.dps;
+        attackRate = tower.attackrate;
+        cost = tower.cost;
+    }
 
     public override float GetHeight()
     {

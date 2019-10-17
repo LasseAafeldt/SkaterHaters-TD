@@ -29,6 +29,10 @@ public class NodeBasedEditor : EditorWindow
     private string colorBegin;
     private string colorEnd;
 
+    private TowerBlueprint tower;
+    //private TowerNode towerNode;
+    string[] workingFolder = { "Assets/ScriptableObjects/TowerBluprints" };
+
     [MenuItem("Window/Node Based Editor")]
     private static void OpenWindow()
     {
@@ -101,19 +105,75 @@ public class NodeBasedEditor : EditorWindow
         {
             LoadTowers();
         }
-        //style.alignment = TextAnchor.UpperLeft;
 
         if (GUI.changed) Repaint();
     }
 
     private void LoadTowers()
     {
-        throw new NotImplementedException();
+        NodeBasedEditor window = GetWindow<NodeBasedEditor>();
+        Rect windoPosition = window.position;
+        Vector2 newNodePosition = new Vector2(windoPosition.x, windoPosition.y);
+        string[] result = AssetDatabase.FindAssets("t:TowerBlueprint",workingFolder);
+
+        if (result.Length != 0)
+        {
+            foreach (String asset in result)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(asset);
+                tower = (TowerBlueprint)AssetDatabase.LoadAssetAtPath(path, typeof(TowerBlueprint));
+                Debug.Log("Towers Found = " + tower.name);
+
+                TowerNode towerNode = new TowerNode(tower);
+                
+                if (nodes == null)
+                {
+                    nodes = new List<Node>();
+                }
+
+                nodes.Add(new Node(newNodePosition, 200, 50, nodeStyle, selectedNodeStyle, inPointStyle, 
+                    outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, towerNode));
+
+            }
+
+        }
+        /*else //creates a new TowerBlueprint if none exist (we don't want that now)
+        {
+            Debug.Log("Did not find any towers");
+            tower = ScriptableObject.CreateInstance<TowerBlueprint>();
+            AssetDatabase.CreateAsset(tower, workingFolder[0] + "/New Tower.asset");
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }*/
     }
 
     private void saveNodes()
     {
-        throw new NotImplementedException();
+        foreach (Node node in nodes)
+        {
+            tower = ScriptableObject.CreateInstance<TowerBlueprint>();
+            TowerNode newTowerNode = (TowerNode)node.myInfo;
+            tower = newTowerNode.GetTower();
+            //tower.upgradesTo = 
+
+            string[] findAllTowersWithName = AssetDatabase.FindAssets(tower.name + " t:TowerBlueprint", workingFolder);
+
+            if (AssetDatabase.FindAssets(tower.name + " t:TowerBlueprint", workingFolder).Length == 0)
+            {
+                //this is where stuff should happen if the asset doesn't already exist (but it seems unnecessary currently)
+            }
+            /*else //doesn't work
+            {
+                Debug.Log("trying to update existing asset");
+                AssetDatabase.AddObjectToAsset(tower, workingFolder[0] + "/" + tower.name + ".asset");
+                AssetDatabase.Refresh();
+            }*/
+            //Debug.Log("You just overwrote the information saved in: " + tower.name);
+            AssetDatabase.CreateAsset(tower, workingFolder[0] + "/" + tower.name + ".asset");
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+        Debug.Log("Towers have been saved");
     }
 
     private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
@@ -242,7 +302,7 @@ public class NodeBasedEditor : EditorWindow
     private void ProcessContextMenu(Vector2 mousePosition)
     {
         GenericMenu genericMenu = new GenericMenu();
-        genericMenu.AddItem(new GUIContent("Add node"), false, () => OnClickAddNode(mousePosition, new TowerNode()));
+        genericMenu.AddItem(new GUIContent("Add new Tower"), false, () => OnClickAddNode(mousePosition, new TowerNode()));
         genericMenu.ShowAsContext();
     }
 

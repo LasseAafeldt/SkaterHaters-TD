@@ -33,7 +33,7 @@ public class Node
         defaultNodeStyle = nodeStyle;
         selectedNodeStyle = selectedStyle;
         OnRemoveNode = OnClickRemoveNode;
-        myInfo = info; // ---------------------------------- this here have problems... myinfo seems to not be set
+        myInfo = info;
         myInfo.style = style;
         collectiveRect = new Rect(nodeRect.position.x, nodeRect.position.y, nodeRect.size.x, 
             nodeRect.size.y + myInfo.GetHeight() + (nodeRect.size.y / 2f));
