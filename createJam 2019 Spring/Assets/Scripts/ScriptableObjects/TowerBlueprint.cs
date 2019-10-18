@@ -32,6 +32,9 @@ public class TowerBlueprint : ScriptableObject {
     public List<TowerBlueprint> upgradesTo = new List<TowerBlueprint>();
     public List<TowerBlueprint> upgradesFrom = new List<TowerBlueprint>();
 
+    [SerializeField][HideInInspector]
+    private Vector2 editorPosition;
+
     public float getMinRange()
     {
         return minRange;
@@ -43,6 +46,15 @@ public class TowerBlueprint : ScriptableObject {
     public float getMaxDPS()
     {
         return maxDPS;
+    }
+
+    public Vector2 getEditorPosition()
+    {
+        return editorPosition;
+    }
+    public void setEditorPosition(Vector2 editorPos)
+    {
+        this.editorPosition = editorPos;
     }
 
 }

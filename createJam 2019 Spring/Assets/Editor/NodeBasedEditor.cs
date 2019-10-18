@@ -118,6 +118,16 @@ public class NodeBasedEditor : EditorWindow
 
         if (result.Length != 0)
         {
+            if (nodes == null)
+            {
+                nodes = new List<Node>();
+            }
+            if(result.Length == nodes.Count)
+            {
+                //we have already loaded once
+                Debug.LogWarning("We have already loaded the Towers once... no need to have duplicate nodes");
+                return;
+            }
             foreach (String asset in result)
             {
                 string path = AssetDatabase.GUIDToAssetPath(asset);
@@ -126,16 +136,15 @@ public class NodeBasedEditor : EditorWindow
 
                 TowerNode towerNode = new TowerNode(tower);
                 
-                if (nodes == null)
+                if(tower.getEditorPosition() == null)
                 {
-                    nodes = new List<Node>();
+                    Debug.Log("editor position is null");
+                    tower.setEditorPosition(newNodePosition);
                 }
-
-                nodes.Add(new Node(newNodePosition, 200, 50, nodeStyle, selectedNodeStyle, inPointStyle, 
+                Debug.Log(tower.name + " Editor position to load in = " + tower.getEditorPosition());
+                nodes.Add(new Node(tower.getEditorPosition(), 200, 50, nodeStyle, selectedNodeStyle, inPointStyle, 
                     outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, towerNode));
-
             }
-
         }
         else
         {
@@ -150,6 +159,9 @@ public class NodeBasedEditor : EditorWindow
             tower = ScriptableObject.CreateInstance<TowerBlueprint>();
             TowerNode newTowerNode = (TowerNode)node.myInfo;
             tower = newTowerNode.GetTower();
+            tower.setEditorPosition(new Vector2(node.nodeRect.x, node.nodeRect.y)+drag);
+            Debug.Log(tower.name + " Editor Position = " + tower.getEditorPosition());
+            
             string path = workingFolders[0] + "/" + tower.name + ".asset";
             TowerBlueprint asset = AssetDatabase.LoadAssetAtPath(path, typeof(TowerBlueprint)) as TowerBlueprint;
 
