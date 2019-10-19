@@ -65,7 +65,8 @@ public class NodeBasedEditor : EditorWindow
         _zoomArea.x = 0f; _zoomArea.y = 0f;
         EditorZoomArea.Begin(_zoom, _zoomArea);
 
-        GUI.DrawTexture(new Rect(0, 0, maxSize.x, maxSize.y), backgroundTex, ScaleMode.StretchToFill); //draw background
+        GUI.DrawTexture(new Rect(0, 0, _zoomArea.width/_zoom, _zoomArea.height/_zoom), backgroundTex, ScaleMode.StretchToFill); //draw background
+        
 
         DrawGrid(20, 0.2f, smallGridColor);
         DrawGrid(100, 0.4f, bigGridColor);
@@ -110,7 +111,6 @@ public class NodeBasedEditor : EditorWindow
             Event.current.Use();
         }
     }
-
 
     private void OnEnable()
     {
@@ -245,8 +245,8 @@ public class NodeBasedEditor : EditorWindow
 
     private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
     {
-        int widthDivs = Mathf.CeilToInt(position.width / gridSpacing);
-        int heightDivs = Mathf.CeilToInt(position.height / gridSpacing);
+        int widthDivs = Mathf.CeilToInt((position.width / gridSpacing) /_zoom);
+        int heightDivs = Mathf.CeilToInt((position.height / gridSpacing) / _zoom);
 
         Handles.BeginGUI();
         Handles.color = new Color(gridColor.r, gridColor.g, gridColor.b, gridOpacity);
@@ -256,12 +256,12 @@ public class NodeBasedEditor : EditorWindow
 
         for (int i = 0; i < widthDivs; i++)
         {
-            Handles.DrawLine(new Vector3(gridSpacing * i, -gridSpacing, 0) + newOffset, new Vector3(gridSpacing * i, position.height, 0f) + newOffset);
+            Handles.DrawLine(new Vector3(gridSpacing * i, -gridSpacing, 0) + newOffset, new Vector3(gridSpacing * i, _zoomArea.height/_zoom, 0f) + newOffset);
         }
 
         for (int j = 0; j < heightDivs; j++)
         {
-            Handles.DrawLine(new Vector3(-gridSpacing, gridSpacing * j, 0) + newOffset, new Vector3(position.width, gridSpacing * j, 0f) + newOffset);
+            Handles.DrawLine(new Vector3(-gridSpacing, gridSpacing * j, 0) + newOffset, new Vector3(_zoomArea.width/_zoom, gridSpacing * j, 0f) + newOffset);
         }
 
         Handles.color = Color.white;
@@ -311,7 +311,7 @@ public class NodeBasedEditor : EditorWindow
             case EventType.MouseDrag:
                 if (e.button == 0)
                 {
-                    OnDrag(e.delta);
+                    OnDrag(e.delta/_zoom);
                 }
                 break;
         }
