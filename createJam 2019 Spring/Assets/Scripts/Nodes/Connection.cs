@@ -8,10 +8,13 @@ public class Connection
     public ConnectionPoint outPoint;
     public Action<Connection> OnClickRemoveConnection;
 
+    public Color connectionColor;
+
     public Connection(ConnectionPoint inPoint, ConnectionPoint outPoint, Action<Connection> OnClickRemoveConnection)
     {
         this.inPoint = inPoint;
         this.outPoint = outPoint;
+        this.connectionColor = Color.white; //change color of connections here
         this.OnClickRemoveConnection = OnClickRemoveConnection;
     }
 
@@ -22,7 +25,7 @@ public class Connection
             outPoint.rect.center,
             inPoint.rect.center + Vector2.left * 50f,
             outPoint.rect.center - Vector2.left * 50f,
-            Color.white,
+            connectionColor,
             null,
             2f
         );

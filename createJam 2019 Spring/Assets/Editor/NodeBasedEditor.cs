@@ -94,6 +94,8 @@ public class NodeBasedEditor : EditorWindow
             _zoom = Mathf.Clamp(_zoom, kMinZoom, kMaxZoom);
             _zoomCoordsOrigin += (zoomCoordsMousePos - _zoomCoordsOrigin) - (oldZoom / _zoom) * 
                 (zoomCoordsMousePos - _zoomCoordsOrigin);
+            //Debug.Log("mouse position: " + _zoomCoordsOrigin);
+            //Debug.Log("Scrolling");
 
             Event.current.Use();
         }
@@ -171,6 +173,9 @@ public class NodeBasedEditor : EditorWindow
         {
             LoadTowers();
         }
+
+        GUI.Label(new Rect(UiPositioning.x + UiPositioning.width * 2 + 30f, UiPositioning.y, UiPositioning.width,
+            UiPositioning.height), colorBegin+"Current Zoom: " + _zoom.ToString("F2") + colorEnd, buttonStyle);
 
         if (GUI.changed) Repaint();
     }
@@ -407,6 +412,8 @@ public class NodeBasedEditor : EditorWindow
             if (selectedOutPoint.node != selectedInPoint.node)
             {
                 CreateConnection();
+                //TowerNode tower = (TowerNode)inPoint.node.myInfo;
+                Debug.Log("I clicked an inPoint on " + inPoint.node.title);
                 ClearConnectionSelection();
             }
             else
@@ -425,6 +432,7 @@ public class NodeBasedEditor : EditorWindow
             if (selectedOutPoint.node != selectedInPoint.node)
             {
                 CreateConnection();
+                Debug.Log("I clicked an outPoint on " + outPoint.node.title);
                 ClearConnectionSelection();
             }
             else
