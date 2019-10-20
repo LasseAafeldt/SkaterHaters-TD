@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b94ddb799560ee14b8b8d6f0b0a9c227, type: 3}
-  m_Name: New tower
+  m_Name: 
   m_EditorClassIdentifier: 
   towerPrefab: {fileID: 0}
   name: New tower
   towertype: 0
   range: 12.2
-  dps: 1882
-  attackrate: 6.99
+  dps: 2559
+  attackrate: 1.75
   cost: 300
-  upgradesTo: []
+  upgradesTo:
+  - {fileID: 11400000, guid: cde7c0b3fdf5b9242922b98eb18ee08f, type: 2}
   upgradesFrom: []
-  editorPosition: {x: 34, y: 115}
+  editorPosition: {x: -60, y: 76}

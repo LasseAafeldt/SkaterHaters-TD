@@ -225,27 +225,94 @@ public class NodeBasedEditor : EditorWindow
 
     private void saveNodes()
     {
-        foreach (Node node in nodes)
-        {
-            tower = ScriptableObject.CreateInstance<TowerBlueprint>();
-            TowerNode newTowerNode = (TowerNode)node.myInfo;
-            tower = newTowerNode.GetTower();
-            tower.setEditorPosition(new Vector2(node.nodeRect.x, node.nodeRect.y)+drag);
-            Debug.Log(tower.name + " Editor Position = " + tower.getEditorPosition());
-            
-            string path = workingFolders[0] + "/" + tower.name + ".asset";
-            TowerBlueprint asset = AssetDatabase.LoadAssetAtPath(path, typeof(TowerBlueprint)) as TowerBlueprint;
 
-            if (asset == null)
+        if (nodes.Count > 0)
+        {
+            // We fill with as many skills as nodes we have
+            TowerBlueprint[] blueprints = new TowerBlueprint[nodes.Count];
+            int[] dependencies;
+            int[] inverseDependencies;
+            List<int> dependenciesList = new List<int>();
+            List<int> inverseDependenciesList = new List<int>();
+
+            // Iterate over all of the nodes. Populating the skills with the node info
+            for (int i = 0; i < nodes.Count; ++i)
             {
-                AssetDatabase.CreateAsset(tower, workingFolders[0] + "/" + tower.name + ".asset");
+                if (connections != null)
+                {
+                    List<Connection> connectionsToRemove = new List<Connection>();
+                    //List<ConnectionPoint> connectionsPointsToCheck = new List<ConnectionPoint>();
+
+                    for (int j = 0; j < connections.Count; j++)
+                    {
+                        if (connections[j].inPoint == nodes[i].inPoint)
+                        {
+                            for (int k = 0; k < nodes.Count; ++k)
+                            {
+                                if (connections[j].outPoint == nodes[k].outPoint)
+                                {
+                                    //Debug.Log("node k = " + k);
+                                    dependenciesList.Add(k);                                    
+                                }
+                                if(connections[j].inPoint == nodes[k].inPoint)
+                                {
+                                    inverseDependenciesList.Add(i);
+                                }
+                            }
+                            connectionsToRemove.Add(connections[j]);
+                            //connectionsPointsToCheck.Add(connections[j].outPoint);
+                        }
+                    }
+                }
+                dependencies = dependenciesList.ToArray();
+                dependenciesList.Clear();
+                inverseDependencies = inverseDependenciesList.ToArray();
+                inverseDependenciesList.Clear();
+                TowerNode newTowerNode = (TowerNode)nodes[i].myInfo;
+
+                blueprints[i] = newTowerNode.GetTower();
+                foreach (int dependency in dependencies)
+                {
+                    string nodeToAdd = nodes[dependency].title;
+                    TowerNode towerNode = (TowerNode)nodes[dependency].myInfo;
+                    TowerBlueprint towerToAdd = ScriptableObject.CreateInstance<TowerBlueprint>();
+                    towerToAdd = towerNode.GetTower();
+                    string _path = workingFolders[0] + "/" + towerToAdd.name + ".asset";
+                    TowerBlueprint _towerToAdd = AssetDatabase.LoadAssetAtPath(_path, typeof(TowerBlueprint)) as TowerBlueprint;
+                    //Debug.LogWarning("Tower to add type: " + towerToAdd.GetType());
+                    blueprints[i].upgradesFrom.Add(_towerToAdd);
+                    string tempPath = workingFolders[0] + "/" + blueprints[i].name + ".asset";
+                    TowerBlueprint tempBlueprintsI = AssetDatabase.LoadAssetAtPath(tempPath, typeof(TowerBlueprint)) as TowerBlueprint;
+                    TowerBlueprint tempTowerToAdd = _towerToAdd;
+                    for (int j = 0; j < blueprints.Length; j++)
+                    {
+                        if(blueprints[j].name == _towerToAdd.name)
+                        {
+                            tempTowerToAdd.upgradesTo.Add(tempBlueprintsI);
+                            EditorUtility.CopySerialized(tempTowerToAdd, _towerToAdd);
+                            break;
+                        }
+                    }
+                }
+                
+                blueprints[i].setEditorPosition(new Vector2(nodes[i].nodeRect.x, nodes[i].nodeRect.y) + drag);
+                Debug.Log(blueprints[i].name + " Editor Position = " + blueprints[i].getEditorPosition());
+
+                string path = workingFolders[0] + "/" + blueprints[i].name + ".asset";
+                TowerBlueprint asset = AssetDatabase.LoadAssetAtPath(path, typeof(TowerBlueprint)) as TowerBlueprint;
+
+                if (asset == null)
+                {
+                    AssetDatabase.CreateAsset(blueprints[i], workingFolders[0] + "/" + blueprints[i].name + ".asset");
+                }
+                else
+                {
+                    EditorUtility.CopySerialized(blueprints[i], asset);
+                }
             }
-            else
-            {
-                EditorUtility.CopySerialized(tower, asset);
-            }
+            
+            Debug.Log("Towers have been saved/updated");
         }
-        Debug.Log("Towers have been saved/updated");
     }
 
     private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)

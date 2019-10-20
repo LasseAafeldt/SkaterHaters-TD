@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b94ddb799560ee14b8b8d6f0b0a9c227, type: 3}
-  m_Name: Zapper
+  m_Name: 
   m_EditorClassIdentifier: 
   towerPrefab: {fileID: 7088706868071838504, guid: 43d402a23cc64a348b4e9fbbb15d4f79,
     type: 3}
@@ -21,5 +21,6 @@ MonoBehaviour:
   attackrate: 2
   cost: 30
   upgradesTo: []
-  upgradesFrom: []
-  editorPosition: {x: 294, y: 223}
+  upgradesFrom:
+  - {fileID: 11400000, guid: 8977984c03f433342945d84e6d92e319, type: 2}
+  editorPosition: {x: 222, y: 76}
