@@ -51,8 +51,7 @@ public class NodeBasedEditor : EditorWindow
 
     private Vector2 ConvertScreenCoordsToZoomCoords(Vector2 screenCoords)
     {
-        NodeBasedEditor window = GetWindow<NodeBasedEditor>();
-        _zoomArea = window.position;
+        _zoomArea = position;
         _zoomArea.x = 0f; _zoomArea.y = 0f;
         return (screenCoords - _zoomArea.TopLeft()) / _zoom + _zoomCoordsOrigin;
     }
@@ -60,8 +59,7 @@ public class NodeBasedEditor : EditorWindow
     {
         // Within the zoom area all coordinates are relative to the top left corner of the zoom area
         // with the width and height being scaled versions of the original/unzoomed area's width and height.
-        NodeBasedEditor window = GetWindow<NodeBasedEditor>();
-        _zoomArea = window.position;
+        _zoomArea = position;
         _zoomArea.x = 0f; _zoomArea.y = 0f;
         EditorZoomArea.Begin(_zoom, _zoomArea);
 
@@ -182,8 +180,7 @@ public class NodeBasedEditor : EditorWindow
 
     private void LoadTowers()
     {
-        NodeBasedEditor window = GetWindow<NodeBasedEditor>();
-        Rect windoPosition = window.position;
+        Rect windoPosition = position;
         Vector2 newNodePosition = new Vector2(windoPosition.x, windoPosition.y);
         string[] result = AssetDatabase.FindAssets("t:TowerBlueprint",workingFolders);
 
@@ -193,7 +190,7 @@ public class NodeBasedEditor : EditorWindow
             {
                 nodes = new List<Node>();
             }
-            if(result.Length == nodes.Count)
+            if(result.Length <= nodes.Count)
             {
                 //we have already loaded once
                 Debug.LogWarning("We have already loaded the Towers once... no need to have duplicate nodes");
@@ -209,12 +206,57 @@ public class NodeBasedEditor : EditorWindow
                 
                 if(tower.getEditorPosition() == null)
                 {
-                    Debug.Log("editor position is null");
+                    //Debug.Log("editor position is null");
                     tower.setEditorPosition(newNodePosition);
                 }
-                Debug.Log(tower.name + " Editor position to load in = " + tower.getEditorPosition());
+                //Debug.Log(tower.name + " Editor position to load in = " + tower.getEditorPosition());
                 nodes.Add(new Node(tower.getEditorPosition(), 200, 50, nodeStyle, selectedNodeStyle, inPointStyle, 
-                    outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, towerNode));
+                    outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, towerNode));                
+            }
+            /*for (int i = 0; i < nodes.Count; ++i)
+            {
+                for (int j = 0; j < nodes[i].skill.skill_Dependencies.Length; ++j)
+                {
+                    if (skillDictionary.TryGetValue(nodes[i].skill.skill_Dependencies[j], out outSkill))
+                    {
+                        for (int k = 0; k < nodes.Count; ++k)
+                        {
+                            if (nodes[k].skill.id_Skill == outSkill.id_Skill)
+                            {
+                                outNode = nodes[k];
+                                OnClickOutPoint(outNode.outPoint);
+                                break;
+                            }
+                        }
+                        OnClickInPoint(nodes[i].inPoint);
+                    }
+                }
+            }*/
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                //string curTowerName = nodes[i].myInfo.title;
+                string path = AssetDatabase.GUIDToAssetPath(result[i]);
+                tower = (TowerBlueprint)AssetDatabase.LoadAssetAtPath(path, typeof(TowerBlueprint));
+                for (int j = 0; j < tower.upgradesFrom.Count; j++)
+                {
+                    string nameToMatch = tower.upgradesFrom[j].name;
+
+                    for (int k = 0; k < nodes.Count; ++k)
+                    {
+                        Node nodeToMatch;
+                        if (nodes[k].myInfo.title == nameToMatch)
+                        {
+                            nodeToMatch = nodes[k];
+                            OnClickOutPoint(nodeToMatch.outPoint);
+                            OnClickInPoint(nodes[i].inPoint);
+                            break;
+                        }
+                    }
+                }
+                for (int j = 0; j < tower.upgradesTo.Count; j++)
+                {
+                    
+                }
             }
         }
         else
@@ -230,18 +272,18 @@ public class NodeBasedEditor : EditorWindow
         {
             // We fill with as many skills as nodes we have
             TowerBlueprint[] blueprints = new TowerBlueprint[nodes.Count];
-            int[] dependencies;
-            int[] inverseDependencies;
-            List<int> dependenciesList = new List<int>();
-            List<int> inverseDependenciesList = new List<int>();
+            int[] In_dependencies;
+            int[] Out_dependencies;
+            List<int> In_dependenciesList = new List<int>();
+            List<int> Out_dependenciesList = new List<int>();
 
             // Iterate over all of the nodes. Populating the skills with the node info
             for (int i = 0; i < nodes.Count; ++i)
             {
                 if (connections != null)
                 {
-                    List<Connection> connectionsToRemove = new List<Connection>();
-                    //List<ConnectionPoint> connectionsPointsToCheck = new List<ConnectionPoint>();
+                    List<Connection> In_connectionsToRemove = new List<Connection>();
+                    List<Connection> Out_connectionsToRemove = new List<Connection>();
 
                     for (int j = 0; j < connections.Count; j++)
                     {
@@ -252,51 +294,53 @@ public class NodeBasedEditor : EditorWindow
                                 if (connections[j].outPoint == nodes[k].outPoint)
                                 {
                                     //Debug.Log("node k = " + k);
-                                    dependenciesList.Add(k);                                    
-                                }
-                                if(connections[j].inPoint == nodes[k].inPoint)
-                                {
-                                    inverseDependenciesList.Add(i);
+                                    In_dependenciesList.Add(k);
                                 }
                             }
-                            connectionsToRemove.Add(connections[j]);
-                            //connectionsPointsToCheck.Add(connections[j].outPoint);
+                            In_connectionsToRemove.Add(connections[j]);
+                        }
+                        if (connections[j].outPoint == nodes[i].outPoint)
+                        {
+                            for (int k = 0; k < nodes.Count; ++k)
+                            {
+                                if (connections[j].inPoint == nodes[k].inPoint)
+                                {
+                                    Out_dependenciesList.Add(k);
+                                }
+                            }
+                            Out_connectionsToRemove.Add(connections[j]);
                         }
                     }
                 }
-                dependencies = dependenciesList.ToArray();
-                dependenciesList.Clear();
-                inverseDependencies = inverseDependenciesList.ToArray();
-                inverseDependenciesList.Clear();
+                In_dependencies = In_dependenciesList.ToArray();
+                In_dependenciesList.Clear();
+                Out_dependencies = Out_dependenciesList.ToArray();
+                Out_dependenciesList.Clear();
+
                 TowerNode newTowerNode = (TowerNode)nodes[i].myInfo;
 
                 blueprints[i] = newTowerNode.GetTower();
-                foreach (int dependency in dependencies)
+                //Debug.Log(blueprints[i].name +" In dependecies length = " + In_dependencies.Length.ToString());
+                //Debug.Log(blueprints[i].name + "Out dependecies length = " + Out_dependencies.Length.ToString());
+                for (int k = 0; k < In_dependencies.Length; k++)
                 {
-                    string nodeToAdd = nodes[dependency].title;
-                    TowerNode towerNode = (TowerNode)nodes[dependency].myInfo;
+                    TowerNode towerNode = (TowerNode)nodes[In_dependencies[k]].myInfo;
                     TowerBlueprint towerToAdd = ScriptableObject.CreateInstance<TowerBlueprint>();
                     towerToAdd = towerNode.GetTower();
                     string _path = workingFolders[0] + "/" + towerToAdd.name + ".asset";
                     TowerBlueprint _towerToAdd = AssetDatabase.LoadAssetAtPath(_path, typeof(TowerBlueprint)) as TowerBlueprint;
                     //Debug.LogWarning("Tower to add type: " + towerToAdd.GetType());
                     blueprints[i].upgradesFrom.Add(_towerToAdd);
+
                     string tempPath = workingFolders[0] + "/" + blueprints[i].name + ".asset";
                     TowerBlueprint tempBlueprintsI = AssetDatabase.LoadAssetAtPath(tempPath, typeof(TowerBlueprint)) as TowerBlueprint;
                     TowerBlueprint tempTowerToAdd = _towerToAdd;
-                    for (int j = 0; j < blueprints.Length; j++)
-                    {
-                        if(blueprints[j].name == _towerToAdd.name)
-                        {
-                            tempTowerToAdd.upgradesTo.Add(tempBlueprintsI);
-                            EditorUtility.CopySerialized(tempTowerToAdd, _towerToAdd);
-                            break;
-                        }
-                    }
+                    //move this functionallity out of bluprints[i] loop
+                    
                 }
                 
                 blueprints[i].setEditorPosition(new Vector2(nodes[i].nodeRect.x, nodes[i].nodeRect.y) + drag);
-                Debug.Log(blueprints[i].name + " Editor Position = " + blueprints[i].getEditorPosition());
+                //Debug.Log(blueprints[i].name + " Editor Position = " + blueprints[i].getEditorPosition());
 
                 string path = workingFolders[0] + "/" + blueprints[i].name + ".asset";
                 TowerBlueprint asset = AssetDatabase.LoadAssetAtPath(path, typeof(TowerBlueprint)) as TowerBlueprint;
@@ -310,7 +354,28 @@ public class NodeBasedEditor : EditorWindow
                     EditorUtility.CopySerialized(blueprints[i], asset);
                 }
             }
-            
+            for (int i = 0; i < blueprints.Length; i++)
+            {
+                for (int j = 0; j < blueprints[i].upgradesFrom.Count; j++)
+                {
+                    for (int k = 0; k < blueprints.Length; k++)
+                    {
+                        if (blueprints[i].upgradesFrom[j].name == blueprints[k].name)
+                        {
+                            //Debug.Log(blueprints[k].name + " || " + blueprints[i].name);
+                            string tempOutPath = workingFolders[0] + "/" + blueprints[k].name + ".asset";
+                            string tempInPath = workingFolders[0] + "/" + blueprints[i].name + ".asset";
+                            TowerBlueprint tempOutTower = AssetDatabase.LoadAssetAtPath(tempOutPath, typeof(TowerBlueprint)) as TowerBlueprint;
+                            TowerBlueprint tempInTower = AssetDatabase.LoadAssetAtPath(tempInPath, typeof(TowerBlueprint)) as TowerBlueprint;
+                            blueprints[k].upgradesTo.Add(tempInTower);
+
+                            //tempTowerToAdd.upgradesTo.Add(tempBlueprintsI);
+                            EditorUtility.CopySerialized(blueprints[k], tempOutTower);
+                        }
+                    }
+                } 
+            }
+
             Debug.Log("Towers have been saved/updated");
         }
     }
@@ -480,7 +545,7 @@ public class NodeBasedEditor : EditorWindow
             {
                 CreateConnection();
                 //TowerNode tower = (TowerNode)inPoint.node.myInfo;
-                Debug.Log("I clicked an inPoint on " + inPoint.node.title);
+                //Debug.Log("I clicked an inPoint on " + inPoint.node.title);
                 ClearConnectionSelection();
             }
             else

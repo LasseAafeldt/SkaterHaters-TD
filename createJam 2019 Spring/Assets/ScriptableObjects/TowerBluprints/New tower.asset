@@ -19,7 +19,6 @@ MonoBehaviour:
   dps: 2559
   attackrate: 1.75
   cost: 300
-  upgradesTo:
-  - {fileID: 11400000, guid: cde7c0b3fdf5b9242922b98eb18ee08f, type: 2}
+  upgradesTo: []
   upgradesFrom: []
-  editorPosition: {x: -60, y: 76}
+  editorPosition: {x: -99, y: 81}

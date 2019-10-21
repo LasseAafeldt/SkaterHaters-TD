@@ -17,10 +17,9 @@ MonoBehaviour:
   name: Zapper
   towertype: 1
   range: 15
-  dps: 10
+  dps: 5
   attackrate: 2
-  cost: 30
+  cost: 20
   upgradesTo: []
-  upgradesFrom:
-  - {fileID: 11400000, guid: 8977984c03f433342945d84e6d92e319, type: 2}
-  editorPosition: {x: 222, y: 76}
+  upgradesFrom: []
+  editorPosition: {x: 316, y: 211}
